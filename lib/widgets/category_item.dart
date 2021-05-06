@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/meal.dart';
 import 'package:food_and_recipe/dummy_data.dart';
-import 'file:///E:/AndroidAppProjects/food_and_recipe/lib/screens/category_meals_screen.dart';
+import '../screens/category_meals_screen.dart';
+
 
 class CategoryItem extends StatelessWidget {
   final String id;

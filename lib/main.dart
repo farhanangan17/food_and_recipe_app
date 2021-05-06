@@ -22,7 +22,22 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+
+  @override
+  dispose(){
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   Map<String, bool> _filters = {
     'gluten': false,
     'lactose': false,
@@ -31,6 +46,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = DummyMeals;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(Map<String, bool> filterData){
     setState(() {
@@ -53,8 +69,33 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _toggleFavorite(String mealId){
+    // .indexWhere check if any element is already part of the meal or not and if it is a part then it return the index
+    final existingIndex = _favoriteMeals.indexWhere((meal) => meal.id == mealId);
+    if(existingIndex >= 0){
+      setState(() {
+        _favoriteMeals.removeAt(existingIndex);
+      });
+    }else{
+      setState(() {
+        _favoriteMeals.add(DummyMeals.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool _isMealFavorite(String id){
+    return _favoriteMeals.any((meal) => meal.id == id);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Map<String, bool> _filters = {
+    //   'gluten': false,
+    //   'lactose': false,
+    //   'vegan': false,
+    //   'vegetarian': false,
+    // };
+
     return MaterialApp(
       title: 'Food&Recipe',
       theme: ThemeData(
@@ -80,12 +121,12 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // home: CategoriesScreen(),
       routes: {
-        '/' : (ctx) => TabsScreen(),
+        '/' : (ctx) => TabsScreen(_favoriteMeals),
         // '/' : (ctx) => CategoriesScreen(),
         CategoriesScreen.routeName : (ctx) => CategoriesScreen(),
         CategoryMealsScreen.routeName : (ctx) => CategoryMealsScreen(_availableMeals),
-        MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
-        FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
+        MealDetailScreen.routeName: (ctx) => MealDetailScreen(_toggleFavorite, _isMealFavorite),
+        // FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
         FiltersScreen.routeName: (ctx) => FiltersScreen(_filters, _setFilters),
       },
       //if anything unusual happens app will go to following page

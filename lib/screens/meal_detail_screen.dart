@@ -9,6 +9,11 @@ import '../models/meal.dart';
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
 
+  final Function toggleFavorite;
+  final Function isFavorite;
+
+  MealDetailScreen(this.toggleFavorite, this.isFavorite);
+
   Widget buildSectionTitle(BuildContext ctx, String text){
     return Container(
       height: (MediaQuery.of(ctx).size.height - MediaQuery.of(ctx).padding.top - MediaQuery.of(ctx).padding.bottom)*0.03,
@@ -95,12 +100,12 @@ class MealDetailScreen extends StatelessWidget {
       Platform.isIOS
           ? Container()
           :FloatingActionButton(
-        child: Icon(Icons.star_border),
-        onPressed: () {
-          Navigator.of(context).pop(
-              mealId
-          );
-        },
+        child: Icon(
+          isFavorite(mealId)
+            ?Icons.star
+            :Icons.star_border
+        ),
+        onPressed: () => toggleFavorite(mealId),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

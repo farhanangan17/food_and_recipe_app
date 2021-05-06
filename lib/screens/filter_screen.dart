@@ -61,7 +61,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(20),
-            child: Text('Adjust your meal screen', style: Theme.of(context).textTheme.title,),
+            child: Text('Adjust Your Meals', style: Theme.of(context).textTheme.title,),
           ),
           Expanded(
               child: ListView(
@@ -72,7 +72,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     _glutenFree,
                     (newValue){
                       setState(() {
-                        _glutenFree = newValue;
+                        _glutenFree = newValue; //this is where _glutenFree or any 4of those become true or false.
                       });
                     }
                    ),
